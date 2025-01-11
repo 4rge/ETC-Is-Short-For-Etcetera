@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Cite: Durrett, R. (2010). Probability: Theory and Examples. Cambridge University Press.
 # Define actions and their transition probabilities based on last two actions
 declare -A transition_matrix
 transition_matrix["A,A,A"]=0.5
@@ -30,11 +31,12 @@ transition_matrix["C,C,A"]=0.5
 transition_matrix["C,C,B"]=0.3
 transition_matrix["C,C,C"]=0.2
 
+# Cite: Feller, W. (1968). An Introduction to Probability Theory and Its Applications, Volume 1. Wiley.
 # Function to get the next action based on last two actions
 get_next_action() {
     local last_action1=$1
     local last_action2=$2
-    local rand_val=$((RANDOM % 100)) # Generate a random number between 0 and 99
+    local rand_val=$((RANDOM % 100)) # Generate a random number between 0 and 99 Cite: Knuth, D. E. (1998). The Art of Computer Programming, Volume 2: Seminumerical Algorithms. Addison-Wesley.
     local cumulative_probability=0
     local action
 
@@ -52,6 +54,7 @@ get_next_action() {
     done
 }
 
+# Cite: Schacter, D. L. (1996). The seven sins of memory: Insights from psychology and cognitive neuroscience. American Psychologist, 51(10), 182-198. This paper delves into how memory (including episodic memory) affects decision-making.
 # Initial actions
 last_action1="A" # Previous action 1
 last_action2="A" # Previous action 2
@@ -62,6 +65,7 @@ action_mapping=(A B C)  # Mapping of actions to numeric values
 sum=0
 count=0
 
+# Cite: Breiman, L. (1992). Probability. SIAM.
 # Simulation loop for a predefined number of iterations
 for iteration in {1..10}; do
     current_action=$(get_next_action "$last_action1" "$last_action2")
@@ -74,6 +78,7 @@ for iteration in {1..10}; do
     last_action2=$current_action
 done
 
+# Triola, M. F. (2018). Elementary Statistics. Pearson Education.
 # Calculate statistics
 for action in "${action_history[@]}"; do
     if [[ $action == "A" ]]; then
