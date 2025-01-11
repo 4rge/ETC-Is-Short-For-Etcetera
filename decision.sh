@@ -47,7 +47,7 @@ get_next_action() {
         # Update cumulative probability
         cumulative_probability=$(awk "BEGIN {print $cumulative_probability + $probability * 100}")
 
-        # Using && and || syntax
+        # Using && and || syntax because we aren't Neanderthals
         (( $(echo "$rand_val < $cumulative_probability" | bc -l) )) && { echo "$action"; return; }
     done
 }
