@@ -46,11 +46,9 @@ get_next_action() {
         probability=${transition_matrix["$last_action1,$last_action2,$action"]}
         # Update cumulative probability
         cumulative_probability=$(awk "BEGIN {print $cumulative_probability + $probability * 100}")
-        
-        if (( $(echo "$rand_val < $cumulative_probability" | bc -l) )); then
-            echo "$action"
-            return
-        fi
+
+        # Using && and || syntax
+        (( $(echo "$rand_val < $cumulative_probability" | bc -l) )) && { echo "$action"; return; }
     done
 }
 
@@ -81,14 +79,7 @@ done
 # Triola, M. F. (2018). Elementary Statistics. Pearson Education.
 # Calculate statistics
 for action in "${action_history[@]}"; do
-    if [[ $action == "A" ]]; then
-        value=0
-    elif [[ $action == "B" ]]; then
-        value=1
-    else
-        value=2
-    fi
-    
+    value=0; [[ $action == "B" ]] && value=1; [[ $action == "C" ]] && value=2
     sum=$((sum + value))
     count=$((count + 1))
 done
@@ -105,22 +96,17 @@ done
 mode="A"
 max_frequency=0
 for action in "${!frequency[@]}"; do
-    if (( frequency[$action] > max_frequency )); then
-        max_frequency=${frequency[$action]}
-        mode=$action
-    fi
+    (( frequency[$action] > max_frequency )) && { max_frequency=${frequency[$action]}; mode=$action; }
 done
 
 # Calculate median
 sorted_history=($(for x in "${action_history[@]}"; do echo "$x"; done | sort))
-if (( count % 2 == 1 )); then
-    median="${sorted_history[$((count / 2))]}"
-else
+(( count % 2 == 1 )) && median="${sorted_history[$((count / 2))]}" || {
     mid1="${sorted_history[$((count / 2))]}"
     mid2="${sorted_history[$((count / 2 - 1))]}"
     # In a real numeric context you'd average the two, but as they are categories, use one as representative
     median=$mid1
-fi
+}
 
 # Prepare final output
 final_result="Final Actions History: ${action_history[@]}"
